@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:jms="http://www.mulesoft.org/schema/mule/jms" xmlns:file="http://www.mulesoft.org/schema/mule/file"
+	xmlns:wsc="http://www.mulesoft.org/schema/mule/wsc"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/wsc http://www.mulesoft.org/schema/mule/wsc/current/mule-wsc.xsd
+http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd
+http://www.mulesoft.org/schema/mule/jms http://www.mulesoft.org/schema/mule/jms/current/mule-jms.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="ab8dc4bb-db0d-44d3-8a55-623523932c43" >
+		<http:listener-connection host="localhost" port="8081" />
+	</http:listener-config>
+	<wsc:config name="Web_Service_Consumer_Config" doc:name="Web Service Consumer Config" doc:id="44d7e61c-6406-44bd-80a0-7fa0a0037910" >
+		<wsc:connection wsdlLocation="C:\Users\tassou\Desktop\Soa\soapwsdl.wsdl" service="LibraryService" port="LibraryPort" address="http://localhost:3001/UserContentService" />
+	</wsc:config>
+	<http:request-config name="HTTP_Request_configuration" doc:name="HTTP Request configuration" doc:id="6f4e785a-d680-4f29-87dc-f3426e3c426a" >
+		<http:request-connection host="localhost" port="3000" />
+	</http:request-config>
+	<http:request-config name="HTTP_Request_configuration1" doc:name="HTTP Request configuration" doc:id="da1336ae-de74-4e35-a079-058b82bbb71e" >
+		<http:request-connection host="localhost" port="5000" />
+	</http:request-config>
+	<jms:config name="JMS_Config" doc:name="JMS Config" doc:id="510ba97e-59e9-467b-9db9-c3d734c91ed9" >
+		<jms:active-mq-connection />
+	</jms:config>
+	<http:request-config name="HTTP_Request_configuration2" doc:name="HTTP Request configuration" doc:id="bccdd120-5dc2-48fe-9542-a594aa594c7c" >
+		<http:request-connection host="localhost" port="3000" />
+	</http:request-config>
+	<http:listener-config name="HTTP_Listener_config1" doc:name="HTTP Listener config" doc:id="2b3c18bf-933b-4a49-99c6-ec039f38d62b" >
+		<http:listener-connection host="localhost" port="8001" />
+	</http:listener-config>
+	<http:request-config name="HTTP_Request_configuration3" doc:name="HTTP Request configuration" doc:id="c37d7446-9792-47ca-b32d-6d7209b398e5" >
+		<http:request-connection host="localhost" port="3000" />
+	</http:request-config>
+	<http:request-config name="HTTP_Request_configuration4" doc:name="HTTP Request configuration" doc:id="3d8a8d94-de95-4868-b767-a28fa4681812" >
+		<http:request-connection host="localhost" port="3000" />
+	</http:request-config>
+	<http:request-config name="HTTP_Request_configuration5" doc:name="HTTP Request configuration" doc:id="5bcba816-19b9-4f46-9e39-03e703707537" >
+		<http:request-connection host="localhost" port="8001" />
+	</http:request-config>
+	<http:request-config name="HTTP_Request_configuration6" doc:name="HTTP Request configuration" doc:id="2fdce88f-e074-40f2-89b8-346ec82ef5b1" >
+		<http:request-connection host="localhost" port="4000" />
+	</http:request-config>
+	<http:listener-config name="HTTP_Listener_config2" doc:name="HTTP Listener config" doc:id="d36229aa-a06a-4d9d-bc3b-80bff920c1d7" >
+		<http:listener-connection host="localhost" port="7000" />
+	</http:listener-config>
+	<http:request-config name="HTTP_Request_configuration7" doc:name="HTTP Request configuration" doc:id="5bf1a3eb-7b09-4b7a-81e8-3552c5adc250" >
+		<http:request-connection host="localhost" port="3004" />
+	</http:request-config>
+	<flow name="workflowbiblioFlow" doc:id="ca1fded7-3c2d-479d-81f3-43028f9b57db" >
+		<http:listener doc:name="Listener" doc:id="53549853-7b75-450e-bb8e-27abfbc79bde" config-ref="HTTP_Listener_config" path="/book"/>
+		<set-variable value="#[payload]" doc:name="Set Variable" doc:id="4ae11138-1444-442e-99eb-102d7430ce40" variableName="parm"/>
+		<choice doc:name="Choice" doc:id="e5ea24e3-e1dd-4ecf-9342-77e305e1951d">
+			<when expression="#[attributes.statusCode == 200 and payload.available == true]">
+				<ee:transform doc:name="Transform Message" doc:id="356a4d57-1af5-4dfb-bad9-b5b8b9b0993c" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/xml
+ns ns0 http://www.example.com/UserContent
+---
+{
+	ns0#borrowBookRequest: {
+		studentId: vars.parm.studentId,
+		bookTitle: vars.parm.BookTitle
+	}
+}]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+				<wsc:consume operation="borrowBook" doc:name="Consume" doc:id="7d5aa923-da31-4295-b5cc-4233a69f032f" config-ref="Web_Service_Consumer_Config"/>
+				<ee:transform doc:name="Transform Message" doc:id="5177902b-ab01-44f5-b3fc-3df1866d6c05" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+
+payload.body]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</when>
+			<otherwise>
+				<http:request method="GET" doc:name="Request" doc:id="6d331098-b65b-4484-bcb0-2e05839c55d8" config-ref="HTTP_Request_configuration" path="#['/check_book/' ++ vars.parm.bookTitle]"/>
+				<file:write doc:name="Write" doc:id="cb963628-a895-4ca5-8812-d13f69dea9cb" path="C:\Users\tassou\Desktop\Soa\result.txt"/>
+			</otherwise>
+		</choice>
+		<jms:publish doc:name="Publish" doc:id="944b6ebb-6f98-45df-9b57-668be82e4f68" destination="listebook" config-ref="JMS_Config">
+			<jms:message >
+				<jms:body ><![CDATA[#[vars.parm]]]></jms:body>
+			</jms:message>
+		</jms:publish>
+	</flow>
+	<flow name="workflowbiblioFlow1" doc:id="682b76cd-a216-4b76-ae40-5bf5f16dfadb" >
+		<jms:listener doc:name="On New Message" doc:id="f00dc996-9122-4f12-a515-aa771673afc3" destination="listebook" numberOfConsumers="1" config-ref="JMS_Config"/>
+		<set-variable value="#[payload.studentId]" doc:name="Set Variable" doc:id="73f4725b-ad12-48a3-aa4d-095cbc248090" variableName="studentId"/>
+		<ee:transform doc:name="Transform Message" doc:id="399cde64-985f-47f4-bf0b-240973bfa861" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"bookTitle":payload.bookTitle
+}
+]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<http:request method="POST" doc:name="Request" doc:id="b379b9dc-7d97-4f45-9843-3d31d55c307f" config-ref="HTTP_Request_configuration1" path='#["/books/" ++ vars.studentId]'>
+		</http:request>
+		<file:write doc:name="Write" doc:id="c239f7d1-c312-4ede-86f5-a7d77b8b2078" path="C:\Users\tassou\Desktop\Soa\listbooks.txt"/>
+	</flow>
+</mule>

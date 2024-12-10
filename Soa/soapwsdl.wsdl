@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns:tns="http://www.example.com/UserContent"
+             xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+             xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+             xmlns="http://schemas.xmlsoap.org/wsdl/"
+             targetNamespace="http://www.example.com/UserContent">
+
+    <types>
+        <xsd:schema targetNamespace="http://www.example.com/UserContent">
+            <xsd:element name="borrowBookRequest">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="studentId" type="xsd:int"/>
+                        <xsd:element name="bookTitle" type="xsd:string"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="borrowBookResponse">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="content" type="xsd:string"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+        </xsd:schema>
+    </types>
+
+    <message name="borrowBookRequest">
+        <part name="parameters" element="tns:borrowBookRequest"/>
+    </message>
+
+    <message name="borrowBookResponse">
+        <part name="parameters" element="tns:borrowBookResponse"/>
+    </message>
+
+    <portType name="LibraryPort">
+        <operation name="borrowBook">
+            <input message="tns:borrowBookRequest"/>
+            <output message="tns:borrowBookResponse"/>
+        </operation>
+    </portType>
+
+    <binding name="LibraryServiceBinding" type="tns:LibraryPort">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <operation name="borrowBook">
+            <soap:operation soapAction="http://www.example.com/UserContent/borrowBook"/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+    </binding>
+
+    <service name="LibraryService">
+        <port name="LibraryPort" binding="tns:LibraryServiceBinding">
+            <soap:address location="http://localhost:3001/UserContentService"/>
+        </port>
+    </service>
+</definitions>

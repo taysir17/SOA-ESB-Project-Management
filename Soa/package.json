@@ -1,0 +1,17 @@
+{
+  "name": "soa",
+  "version": "1.0.0",
+  "main": "addbook.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "mysql2": "^3.11.5",
+    "soap": "^1.1.6",
+    "strong-soap": "^4.1.6"
+  }
+}

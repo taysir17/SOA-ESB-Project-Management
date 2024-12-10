@@ -1,0 +1,6 @@
+{
+  "library_name": [
+    "Biblioth\u00e8que Centrale"
+  ],
+  "title": "1984"
+}
