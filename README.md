@@ -75,7 +75,7 @@ This project demonstrates the use of an Enterprise Service Bus (ESB) to integrat
     ```sh
     cd addbook-service
     npm install
-    node app.js
+    node addbook.js
     ```
 
 4. **Run the Check Availability Service**:
@@ -87,15 +87,14 @@ This project demonstrates the use of an Enterprise Service Bus (ESB) to integrat
 5. **Run the Library Service**:
     ```sh
     cd library-service
-    pip install -r requirements.txt
-    python app.py
+    python library.py
     ```
 
 6. **Run the Student List Service**:
     ```sh
     cd student-list-service
     npm install
-    node app.js
+    node student.js
     ```
 
 7. **Run the MuleSoft ESB Project**:
