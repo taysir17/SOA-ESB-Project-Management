@@ -20,24 +20,28 @@ This project demonstrates the use of an Enterprise Service Bus (ESB) to integrat
 - **Path**: `addbook-service/`
 - **Technology**: Node.js, SOAP
 - **Description**: Adds a book for a student.
+- **Endpoint**: `http://localhost:3001/UserContentService`
 
 ### Check Availability Service
 
 - **Path**: `check-availability-service/`
 - **Technology**: Spring Boot, REST
 - **Description**: Checks if a book is available.
+- **Endpoint**: `http://localhost:8080/service/livres/{libelle}`
 
 ### Library Service
 
 - **Path**: `library-service/`
 - **Technology**: Python (Flask), REST
 - **Description**: Finds other libraries that have a specific book.
+- **Endpoint**: `http://localhost:3000/check_book/{title}`
 
 ### Student List Service
 
 - **Path**: `student-list-service/`
 - **Technology**: Node.js, REST
 - **Description**: Shows the list of books borrowed by a student.
+- **Endpoint**: `http://localhost:5000/books/{cin}`
 
 ## ESB Mule Project
 
@@ -110,6 +114,13 @@ This project demonstrates the use of an Enterprise Service Bus (ESB) to integrat
     - The library checks the book's status:
         - If the book is available, the library processes the loan and provides the student with the list of books they have already borrowed.
         - If the book is not available, the library informs the student of the library or location where the book is currently available.
+
+## Screenshots
+
+### MuleSoft Flow
+
+![MuleSoft Flow](screenshots/Flow1.jpg)
+![MuleSoft Flow](screenshots/Flow2.jpg)
 
 ## Objective
 
